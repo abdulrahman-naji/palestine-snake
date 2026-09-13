@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الدودة نيون ٢٠٢٦ - الإشدار الاحترافي</title>
+    <title>لعبة الدودة - عبد الرحمن ناجي أبو بكر</title>
     <style>
         * {
             box-sizing: border-box;
             user-select: none;
+            touch-action: manipulation;
         }
         body {
-            background-color: #06060c !important;
-            color: #f1f1f6 !important;
+            background-color: #f4f6f9 !important;
+            color: #1a1a2e !important;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
             text-align: center !important;
             margin: 0 !important;
-            padding: 15px 10px !important;
+            padding: 10px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
@@ -24,49 +25,65 @@
             overflow-x: hidden;
         }
         h1 { 
-            margin: 0 0 10px 0 !important; 
-            font-size: 32px !important; 
+            margin: 0 0 4px 0 !important; 
+            font-size: 26px !important; 
             font-weight: 900 !important;
-            background: linear-gradient(45deg, #00ff66, #00ffff, #ff007f) !important;
-            background-size: 200% auto !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            animation: shine 3s linear infinite;
+            color: #1a1a2e !important;
         }
-        @keyframes shine {
-            to { background-position: 200% center; }
+        .developer-tag {
+            font-size: 14px !important;
+            font-weight: 800 !important;
+            color: #ff0055 !important;
+            margin-bottom: 10px !important;
         }
         .scoreboard-container {
             display: flex !important;
-            gap: 20px !important;
-            font-size: 15px !important;
+            gap: 12px !important;
+            font-size: 13px !important;
             font-weight: 700;
-            margin-bottom: 15px !important;
-            background: rgba(255, 255, 255, 0.03) !important;
-            padding: 10px 25px !important;
+            margin-bottom: 10px !important;
+            background: #ffffff !important;
+            padding: 8px 20px !important;
             border-radius: 30px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            box-shadow: 0 0 20px rgba(0, 255, 200, 0.05);
+            border: 1px solid #e1e8ed !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
+        /* إطار اللعبة الكبير المتغير الألوان */
         .game-container {
             position: relative !important;
             border-radius: 22px !important;
-            padding: 4px !important;
-            background: linear-gradient(135deg, #00ff66, #00ffff, #ff007f) !important;
-            box-shadow: 0 0 30px rgba(0, 255, 102, 0.2);
+            padding: 6px !important;
+            background: linear-gradient(270deg, #ff0055, #00c853, #00b0ff, #7c4dff, #ff0055) !important;
+            background-size: 400% 400% !important;
+            animation: rainbowBorder 8s ease infinite !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+
+        @keyframes rainbowBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* تكبير الكانفاس وخلفية بيضاء تماماً */
         canvas {
-            background-color: #030307 !important;
-            border-radius: 18px !important;
+            background-color: #ffffff !important;
+            border-radius: 16px !important;
             display: block !important;
-            max-width: 100% !important;
-            height: auto !important;
+            width: 480px !important;
+            height: 480px !important;
+            max-width: 95vw !important;
+            max-height: 60vh !important;
         }
-        #start-screen, #game-over-screen {
+
+        .overlay-screen {
             position: absolute !important;
-            top: 4px !important; left: 4px !important; right: 4px !important; bottom: 4px !important;
-            background-color: rgba(6, 6, 14, 0.94) !important;
-            border-radius: 18px !important;
+            top: 6px !important; left: 6px !important; right: 6px !important; bottom: 6px !important;
+            background-color: rgba(255, 255, 255, 0.96) !important;
+            border-radius: 16px !important;
             display: flex;
             flex-direction: column !important;
             justify-content: center !important;
@@ -74,125 +91,146 @@
             backdrop-filter: blur(8px);
             z-index: 10 !important;
         }
-        #game-over-screen { display: none; }
+        #game-over-screen, #pause-screen { display: none; }
         
-        h2 { font-size: 32px !important; margin: 0 0 10px 0 !important; font-weight: 800 !important; }
-        #game-over-screen h2 { color: #ff3b30 !important; text-shadow: 0 0 15px rgba(255, 59, 48, 0.5); }
-        #start-screen h2 { color: #00ff66 !important; text-shadow: 0 0 15px rgba(0, 255, 102, 0.5); }
-        p { font-size: 15px !important; margin: 0 0 20px 0 !important; color: #a0a0b0 !important; }
+        h2 { font-size: 26px !important; margin: 0 0 10px 0 !important; font-weight: 800 !important; }
+        #game-over-screen h2 { color: #d50000 !important; }
+        #start-screen h2 { color: #00c853 !important; }
+        #pause-screen h2 { color: #00b0ff !important; }
         
-        .controls {
-            margin-top: 15px !important;
-            display: flex !important;
-            gap: 8px !important;
-            justify-content: center !important;
-        }
-        .controls button {
-            background: rgba(255, 255, 255, 0.04) !important;
-            color: #e1e1e8 !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding: 8px 16px !important;
-            font-size: 13px !important;
-            font-weight: 700 !important;
-            cursor: pointer !important;
-            border-radius: 12px !important;
-            transition: all 0.2s ease;
-        }
-        .controls button:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-        .active-speed { 
-            background: rgba(0, 255, 102, 0.15) !important; 
-            border-color: #00ff66 !important;
-            color: #00ff66 !important;
-            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
-        }
-        .action-btn {
-            background: linear-gradient(45deg, #007ff7, #00c6ff) !important;
-            border: none !important; 
-            color: white !important;
-            padding: 12px 30px !important; 
-            font-size: 16px !important; 
-            font-weight: 800 !important;
-            border-radius: 14px !important;
-            cursor: pointer !important;
-            box-shadow: 0 0 20px rgba(0, 127, 247, 0.4);
-            transition: transform 0.2s;
-        }
-        .action-btn:hover {
-            transform: scale(1.05);
+        p { font-size: 14px !important; margin: 0 0 15px 0 !important; color: #555 !important; }
+        
+        .option-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        /* تم قفل الاتجاه هنا ليكون LTR حتى لا تنعكس الشبكة */
+        .opt-btn {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .opt-btn.active {
+            background: #00c853;
+            color: #fff;
+            border-color: #00c853;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #00c853, #00b0ff) !important;
+            border: none !important; 
+            color: white !important;
+            padding: 10px 28px !important; 
+            font-size: 16px !important; 
+            font-weight: 800 !important;
+            border-radius: 12px !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+            margin-top: 10px;
+        }
+
+        .controls-panel {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+
         .d-pad {
-            margin-top: 20px !important;
+            margin-top: 10px !important;
             display: grid !important;
             direction: ltr !important;
-            grid-template-columns: repeat(3, 65px) !important;
-            grid-template-rows: repeat(3, 65px) !important;
-            gap: 8px !important;
+            grid-template-columns: repeat(3, 54px) !important;
+            grid-template-rows: repeat(3, 54px) !important;
+            gap: 6px !important;
         }
         .d-btn {
-            background: rgba(255, 255, 255, 0.05) !important;
-            color: #fff !important; 
-            border: 1px solid rgba(255, 255, 255, 0.12) !important;
-            border-radius: 18px !important; 
-            font-size: 22px !important;
+            background: #ffffff !important;
+            color: #1a1a2e !important; 
+            border: 1px solid #ccc !important;
+            border-radius: 14px !important; 
+            font-size: 18px !important;
             display: flex !important; 
             justify-content: center !important; 
             align-items: center !important;
             cursor: pointer !important;
-            transition: all 0.1s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
         .d-btn:active {
-            background: rgba(0, 255, 102, 0.3) !important;
-            transform: scale(0.92);
+            background: #00c853 !important;
+            color: white !important;
         }
-        .space-hint {
-            margin-top: 8px;
+        .footer-brand {
+            margin-top: 10px;
             font-size: 12px;
-            color: #888;
+            font-weight: 700;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <h1>لعبة الدودة نيون ٢٠٢٦</h1>
+    <h1>لعبة الدودة نيون</h1>
+    <div class="developer-tag">تطوير: عبد الرحمن ناجي أبو بكر</div>
     
     <div class="scoreboard-container">
-        <div>النقاط: <span id="score" style="color: #00ff66;">0</span></div>
-        <div>الأعلى: <span id="high-score" style="color: #ffca28;">0</span></div>
-        <div>النمط: <span id="current-speed" style="color: #00ffff;">متوازن</span></div>
+        <div>النقاط: <span id="score" style="color: #00c853;">0</span></div>
+        <div>الأعلى: <span id="high-score" style="color: #ff9100;">0</span></div>
+        <div>المستوى: <span id="level" style="color: #ff0055;">1</span></div>
+        <div>النمط: <span id="speed-label" style="color: #00b0ff;">متوازن</span></div>
     </div>
 
     <div class="game-container">
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <canvas id="gameCanvas" width="960" height="960"></canvas>
         
-        <div id="start-screen">
+        <div id="start-screen" class="overlay-screen">
             <h2>مستعد للتحدي؟</h2>
-            <p>تحكم بالأسهم أو بالأزرار | اضغط Space للبدء</p>
+            <p>اضغط للبدء واكتشف مهاراتك!</p>
             <button class="action-btn" onclick="startGame()">ابدأ اللعب الآن</button>
-            <div class="space-hint">يمكنك الضغط على [ Space ] للبدء مباشرة</div>
         </div>
 
-        <div id="game-over-screen">
+        <div id="pause-screen" class="overlay-screen">
+            <h2>موقوف مؤقتاً</h2>
+            <button class="action-btn" onclick="togglePause()">متابعة اللعب</button>
+        </div>
+
+        <div id="game-over-screen" class="overlay-screen">
             <h2>انتهى التحدي!</h2>
-            <p>النتيجة النهائية: <span id="final-score" style="color:#00ff66; font-weight:bold;">0</span></p>
+            <p>النتيجة النهائية: <span id="final-score" style="color:#00c853; font-weight:bold;">0</span></p>
             <button class="action-btn" onclick="resetGame()">إعادة اللعب</button>
-            <div class="space-hint">اضغط على [ Space ] لإعادة اللعب فوراً</div>
         </div>
     </div>
 
-    <div class="controls">
-        <button id="sp1" onclick="setSpeed(140, 'sp1', 'كلاسيك')">كلاسيك</button>
-        <button id="sp2" class="active-speed" onclick="setSpeed(85, 'sp2', 'متوازن')">متوازن</button>
-        <button id="sp3" onclick="setSpeed(55, 'sp3', 'سريع جداً')">سريع جداً</button>
-        <button id="sp4" onclick="setSpeed(35, 'sp4', 'السرعة القصوى')">السرعة القصوى</button>
+    <!-- أزرار التحكم المباشرة بالسرعة والعوائق أثناء اللعب -->
+    <div class="controls-panel">
+        <div class="option-group">
+            <span style="font-size: 12px; font-weight: bold; align-self: center;">السرعة:</span>
+            <button class="opt-btn" id="sp1" onclick="setSpeed(140, 'sp1', 'كلاسيك')">كلاسيك</button>
+            <button class="opt-btn active" id="sp2" onclick="setSpeed(85, 'sp2', 'متوازن')">متوازن</button>
+            <button class="opt-btn" id="sp3" onclick="setSpeed(55, 'sp3', 'سريع جداً')">سريع جداً</button>
+            <button class="opt-btn" id="sp4" onclick="setSpeed(35, 'sp4', 'السرعة القصوى')">السرعة القصوى</button>
+        </div>
+
+        <div class="option-group">
+            <span style="font-size: 12px; font-weight: bold; align-self: center;">العوائق:</span>
+            <button class="opt-btn active" id="obs-off" onclick="setObstacles(false)">بدون عوائق</button>
+            <button class="opt-btn" id="obs-on" onclick="setObstacles(true)">مع عوائق</button>
+            <button class="opt-btn" onclick="togglePause()" style="border-color:#00b0ff; color:#00b0ff;">إيقاف (P)</button>
+        </div>
     </div>
 
-    <!-- شبكة التحكم بنظام LTR: يسار في اليسار، يمين في اليمين -->
     <div class="d-pad">
         <div></div>
         <button class="d-btn" onclick="changeDirection('UP')">▲</button>
@@ -205,86 +243,98 @@
         <div></div>
     </div>
 
+    <div class="footer-brand">جميع الحقوق محفوظة © عبد الرحمن ناجي أبو بكر</div>
+
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
+        
+        const scale = 2; 
+        const grid = 20 * scale; 
+        const radius = 10 * scale;
+
         const gameOverScreen = document.getElementById("game-over-screen");
         const startScreen = document.getElementById("start-screen");
+        const pauseScreen = document.getElementById("pause-screen");
 
-        const grid = 20; 
-        const radius = 10;
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(freq, type, duration) {
+            try {
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        let allowObstacles = false;
         let snake = [];
-        let dx = grid; 
-        let dy = 0;
-        let foodX = 0; 
-        let foodY = 0;
-        
-        let specialFood = null;
-        let particles = [];
-
+        let dx = grid, dy = 0;
+        let foodX = 0, foodY = 0;
+        let obstacles = [];
         let score = 0;
+        let level = 1;
         let highScore = localStorage.getItem("local_snake_high_2026") || 0;
         let gameInterval = null;
         let currentDelay = 85; 
         let isGameOver = false;
         let isGameStarted = false;
+        let isPaused = false;
         let changingDirection = false;
 
         document.getElementById("high-score").innerText = highScore;
 
+        // تغيير السرعة مباشرة أثناء اللعب
+        function setSpeed(delay, btnId, speedText) {
+            currentDelay = delay;
+            document.getElementById("speed-label").innerText = speedText;
+            document.querySelectorAll('.controls-panel button[id^="sp"]').forEach(b => b.classList.remove('active'));
+            document.getElementById(btnId).classList.add('active');
+            
+            if (isGameStarted && !isGameOver && !isPaused) {
+                clearInterval(gameInterval);
+                gameInterval = setInterval(main, currentDelay);
+            }
+        }
+
+        // تفعيل أو إيقاف العوائق مباشرة أثناء اللعب
+        function setObstacles(enable) {
+            allowObstacles = enable;
+            document.getElementById("obs-off").classList.toggle("active", !enable);
+            document.getElementById("obs-on").classList.toggle("active", enable);
+            generateObstacles();
+        }
+
+        function generateObstacles() {
+            obstacles = [];
+            if (allowObstacles) {
+                const count = level * 3;
+                for (let i = 0; i < count; i++) {
+                    obstacles.push({
+                        x: Math.floor(Math.random() * (canvas.width / grid)) * grid,
+                        y: Math.floor(Math.random() * (canvas.height / grid)) * grid
+                    });
+                }
+            }
+        }
+
         function randomFood() {
             foodX = Math.floor(Math.random() * (canvas.width / grid)) * grid;
             foodY = Math.floor(Math.random() * (canvas.height / grid)) * grid;
-            for (let i = 0; i < snake.length; i++) {
-                if (snake[i].x === foodX && snake[i].y === foodY) {
-                    randomFood();
-                    break;
-                }
-            }
-
-            if (Math.random() < 0.25 && !specialFood) {
-                spawnSpecialFood();
-            }
-        }
-
-        function spawnSpecialFood() {
-            let sx = Math.floor(Math.random() * (canvas.width / grid)) * grid;
-            let sy = Math.floor(Math.random() * (canvas.height / grid)) * grid;
-            specialFood = { x: sx, y: sy, timer: 40 };
-        }
-
-        function createParticles(x, y, color) {
-            for (let i = 0; i < 8; i++) {
-                particles.push({
-                    x: x + radius,
-                    y: y + radius,
-                    vx: (Math.random() - 0.5) * 6,
-                    vy: (Math.random() - 0.5) * 6,
-                    alpha: 1,
-                    color: color
-                });
-            }
-        }
-
-        function updateAndDrawParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.05;
-
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
-
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+            for (let obs of obstacles) {
+                if (obs.x === foodX && obs.y === foodY) return randomFood();
             }
         }
 
@@ -293,31 +343,13 @@
             ctx.beginPath();
             ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
             ctx.clip(); 
-
-            ctx.fillStyle = "white";
-            ctx.fillRect(x, y, grid, grid);
-            
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(x, y, grid, 6.6);
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x, y + 6.6, grid, 6.6);
-            ctx.fillStyle = "#009639";
-            ctx.fillRect(x, y + 13.2, grid, 6.6);
-            
+            ctx.fillStyle = "white"; ctx.fillRect(x, y, grid, grid);
+            ctx.fillStyle = "#000000"; ctx.fillRect(x, y, grid, grid / 3);
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(x, y + (grid / 3), grid, grid / 3);
+            ctx.fillStyle = "#009639"; ctx.fillRect(x, y + (grid * 2 / 3), grid, grid / 3);
             ctx.fillStyle = "#ff2233";
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x, y + grid);
-            ctx.lineTo(x + 7, y + radius);
-            ctx.fill();
-
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + grid); ctx.lineTo(x + (grid * 0.4), y + radius); ctx.fill();
             ctx.restore();
-
-            ctx.strokeStyle = "rgba(255,255,255,0.4)";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
-            ctx.stroke();
         }
 
         function drawCircularTarget(x, y) {
@@ -325,164 +357,124 @@
             ctx.beginPath();
             ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
             ctx.clip();
-
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x, y, grid, grid);
-            
-            ctx.fillStyle = "#0038a8";
-            ctx.fillRect(x, y + 2, grid, 3);
-            ctx.fillRect(x, y + 15, grid, 3);
-            
-            ctx.beginPath();
-            ctx.arc(x + radius, y + radius, 4, 0, Math.PI * 2);
-            ctx.fill();
-
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(x, y, grid, grid);
+            ctx.fillStyle = "#0038a8"; ctx.fillRect(x, y + 4, grid, 6); ctx.fillRect(x, y + grid - 10, grid, 6);
+            ctx.beginPath(); ctx.arc(x + radius, y + radius, radius * 0.4, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
-
-            ctx.strokeStyle = "rgba(0,85,255,0.5)";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
-            ctx.stroke();
         }
 
-        function drawSpecialFood(x, y) {
-            ctx.save();
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = "#ffca28";
-            ctx.fillStyle = "#ffca28";
-            ctx.beginPath();
-            ctx.arc(x + radius, y + radius, radius - 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
+        function drawObstacles() {
+            for (let obs of obstacles) {
+                ctx.save();
+                ctx.fillStyle = "#d50000";
+                ctx.shadowBlur = 10 * scale;
+                ctx.shadowColor = "rgba(213, 0, 0, 0.4)";
+                ctx.fillRect(obs.x + 2, obs.y + 2, grid - 4, grid - 4);
+                ctx.restore();
+            }
         }
 
         function main() {
-            if (!isGameStarted || isGameOver) return;
-
+            if (!isGameStarted || isGameOver || isPaused) return;
             changingDirection = false;
-            
+
             const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-
-            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
-                endGame();
-                return;
-            }
-
-            for (let i = 0; i < snake.length; i++) {
-                if (head.x === snake[i].x && head.y === snake[i].y) {
-                    endGame();
-                    return;
-                }
-            }
-
+            if (checkCollision(head) || checkObstacleCollision(head)) { endGame(); return; }
             snake.unshift(head);
 
             if (head.x === foodX && head.y === foodY) {
                 score += 10;
-                createParticles(foodX, foodY, "#00ff66");
-                document.getElementById("score").innerText = score;
-                if (score > highScore) {
-                    highScore = score;
-                    localStorage.setItem("local_snake_high_2026", highScore);
-                    document.getElementById("high-score").innerText = highScore;
-                }
+                playSound(600, "sine", 0.1);
+                updateScore();
                 randomFood();
-            } 
-            else if (specialFood && head.x === specialFood.x && head.y === specialFood.y) {
-                score += 30;
-                createParticles(specialFood.x, specialFood.y, "#ffca28");
-                document.getElementById("score").innerText = score;
-                specialFood = null;
-            } 
-            else {
+            } else {
                 snake.pop();
             }
 
-            if (specialFood) {
-                specialFood.timer--;
-                if (specialFood.timer <= 0) specialFood = null;
-            }
-
+            // مسح الشاشة بالكامل لخلفية بيضاء ناصعة بدون مربعات
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
-            for (let i = 0; i < canvas.width; i += grid) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
-            }
-
+            if (allowObstacles) drawObstacles();
             drawCircularTarget(foodX, foodY);
 
-            if (specialFood) {
-                drawSpecialFood(specialFood.x, specialFood.y);
-            }
+            for (let s of snake) drawCircularPalestine(s.x, s.y);
+        }
 
+        function updateScore() {
+            document.getElementById("score").innerText = score;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("local_snake_high_2026", highScore);
+                document.getElementById("high-score").innerText = highScore;
+            }
+            let newLevel = Math.floor(score / 50) + 1;
+            if (newLevel !== level) {
+                level = newLevel;
+                document.getElementById("level").innerText = level;
+                if (allowObstacles) generateObstacles();
+            }
+        }
+
+        function checkCollision(head) {
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) return true;
             for (let i = 0; i < snake.length; i++) {
-                drawCircularPalestine(snake[i].x, snake[i].y);
+                if (head.x === snake[i].x && head.y === snake[i].y) return true;
             }
+            return false;
+        }
 
-            updateAndDrawParticles();
+        function checkObstacleCollision(head) {
+            if (!allowObstacles) return false;
+            for (let obs of obstacles) {
+                if (head.x === obs.x && head.y === obs.y) return true;
+            }
+            return false;
         }
 
         function changeDirection(dir) {
+            initAudio();
             if (changingDirection) return;
-
-            const goingUp = dy === -grid;
-            const goingDown = dy === grid;
-            const goingRight = dx === grid;
-            const goingLeft = dx === -grid;
-
-            if (dir === 'LEFT' && !goingRight) { dx = -grid; dy = 0; changingDirection = true; }
-            if (dir === 'UP' && !goingDown) { dx = 0; dy = -grid; changingDirection = true; }
-            if (dir === 'RIGHT' && !goingLeft) { dx = grid; dy = 0; changingDirection = true; }
-            if (dir === 'DOWN' && !goingUp) { dx = 0; dy = grid; changingDirection = true; }
+            if (dir === 'LEFT' && dx === 0) { dx = -grid; dy = 0; changingDirection = true; }
+            if (dir === 'UP' && dy === 0) { dx = 0; dy = -grid; changingDirection = true; }
+            if (dir === 'RIGHT' && dx === 0) { dx = grid; dy = 0; changingDirection = true; }
+            if (dir === 'DOWN' && dy === 0) { dx = 0; dy = grid; changingDirection = true; }
         }
 
         document.addEventListener("keydown", (e) => {
+            initAudio();
             if (e.key === "ArrowLeft") changeDirection('LEFT');
             if (e.key === "ArrowUp") changeDirection('UP');
             if (e.key === "ArrowRight") changeDirection('RIGHT');
             if (e.key === "ArrowDown") changeDirection('DOWN');
-            
+            if (e.code === "KeyP") togglePause();
             if (e.code === "Space") {
                 e.preventDefault();
-                if (!isGameStarted || isGameOver) {
-                    startGame();
-                }
+                if (!isGameStarted || isGameOver) startGame();
             }
         });
 
-        function setSpeed(delay, btnId, speedText) {
-            currentDelay = delay;
-            document.getElementById("current-speed").innerText = speedText;
-            document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active-speed'));
-            document.getElementById(btnId).classList.add('active-speed');
-
-            if (isGameStarted && !isGameOver) {
-                clearInterval(gameInterval);
-                gameInterval = setInterval(main, currentDelay);
-            }
+        function togglePause() {
+            if (!isGameStarted || isGameOver) return;
+            initAudio();
+            isPaused = !isPaused;
+            pauseScreen.style.setProperty("display", isPaused ? "flex" : "none", "important");
+            playSound(300, "triangle", 0.1);
         }
 
         function startGame() {
-            snake = [
-                { x: 160, y: 200 },
-                { x: 140, y: 200 },
-                { x: 120, y: 200 }
-            ];
-            dx = grid;
-            dy = 0;
-            score = 0;
-            particles = [];
-            specialFood = null;
+            initAudio();
+            snake = [{ x: 400, y: 480 }, { x: 360, y: 480 }, { x: 320, y: 480 }];
+            dx = grid; dy = 0;
+            score = 0; level = 1;
             document.getElementById("score").innerText = score;
-            isGameOver = false;
-            isGameStarted = true;
+            document.getElementById("level").innerText = level;
+            isGameOver = false; isGameStarted = true; isPaused = false;
             
             startScreen.style.setProperty("display", "none", "important");
             gameOverScreen.style.setProperty("display", "none", "important");
+            pauseScreen.style.setProperty("display", "none", "important");
             
+            generateObstacles();
             randomFood();
             clearInterval(gameInterval);
             gameInterval = setInterval(main, currentDelay);
@@ -490,14 +482,13 @@
 
         function endGame() {
             isGameOver = true;
+            playSound(150, "sawtooth", 0.4);
             clearInterval(gameInterval);
             document.getElementById("final-score").innerText = score;
             gameOverScreen.style.setProperty("display", "flex", "important");
         }
 
-        function resetGame() {
-            startGame();
-        }
+        function resetGame() { startGame(); }
     </script>
 </body>
 </html>
